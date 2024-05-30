@@ -23,7 +23,7 @@ unsigned long Zeitlastswitch = 0;
 boolean leuchte = false;
 
 void setup() {
-  pinMode (30, OUTPUT);
+  pinMode (30, OUTPUT); //Rote LED
   
   
 }
