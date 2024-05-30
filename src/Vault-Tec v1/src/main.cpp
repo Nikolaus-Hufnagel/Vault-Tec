@@ -13,12 +13,12 @@ char hexaKeys[ROWS][COLS]={
 };
 
 byte colPins[COLS] = {35,33,31,29}; //Definition der Pins für die 4 Spalten
-byte rowPins[ROWS] = {27,25,23,21};//Definition der Pins für die 4 Zeilen
+byte rowPins[ROWS] = {27,25,23,22};//Definition der Pins für die 4 Zeilen
 char Taste; //Taste ist die Variable für die jeweils gedrückte Taste.
 
 Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann absofort mit "Tastenfeld" angesprochen werden
 
-int blinkzeitms = 1000;
+int blinkzeitms = 200;
 unsigned long Zeitlastswitch = 0;
 boolean leuchte = false;
 
