@@ -18,7 +18,7 @@ char Taste; //Taste ist die Variable für die jeweils gedrückte Taste.
 
 Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann absofort mit "Tastenfeld" angesprochen werden
 
-int blinkzeitms = 200;
+int blinkzeitms = 150;
 unsigned long Zeitlastswitch = 0;
 boolean leuchte = false;
 
