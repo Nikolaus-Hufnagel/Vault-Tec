@@ -29,9 +29,11 @@ unsigned long Zeitlastswitch = 0;
 MFRC522 rfid(53,5); // RFID Empfänger benennen und Pins zuordnen
 byte readcard[4];
 
+LiquidCrystal lcd(8,7,48,46,49,47);   //LCD Pins
+
 void setup() {
   pinMode (30, OUTPUT); //Rote LED
-  
+  lcd.begin(16,2);
   Serial.begin(9600);
   while (!Serial);
 
@@ -120,6 +122,8 @@ int getID() {
 
 void loop() {
 
+  lcd.setCursor(0,0);
+  lcd.print("VAULT-TEC");
   getID();
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
