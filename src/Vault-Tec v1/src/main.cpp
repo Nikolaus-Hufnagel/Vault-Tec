@@ -1,10 +1,11 @@
 #include <Arduino.h>
-#include <Keypad.h>
-#include <MFRC522.h>
-#include <LiquidCrystal.h>
+#include <Keypad.h>           //Keypad Library
+#include <MFRC522.h>          //RFID Library
+#include <LiquidCrystal.h>    //LCD Library    
 #include <Wire.h>
 
-   //Hier wird die größe des Keypads definiert
+
+    //Hier wird die größe des Keypads definiert
 const byte COLS = 4; //4 Spalten
 const byte ROWS = 4; //4 Zeilen
     //Die Ziffern und Zeichen des Keypads werden eingegeben:
@@ -12,28 +13,33 @@ char hexaKeys[ROWS][COLS]={
 {'D','#','0','*'},
 {'C','9','8','7'},
 {'B','6','5','4'},
-{'A','3','2','1'}
-};
-
+{'A','3','2','1'} };
 byte colPins[COLS] = {35,33,31,29}; //Definition der Pins für die 4 Spalten
 byte rowPins[ROWS] = {27,25,23,22};//Definition der Pins für die 4 Zeilen
 char Taste; //Taste ist die Variable für die jeweils gedrückte Taste.
-
 Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann absofort mit "Tastenfeld" angesprochen werden
+
+
 
 unsigned long blinkzeitms = 100; //Blinkzeit der roten LED bei tastendruck
 unsigned long Zeitlastswitch = 0;
 
 
 
+
 MFRC522 rfid(53,5); // RFID Empfänger benennen und Pins zuordnen
 byte readcard[4];
 
+
+
 LiquidCrystal lcd(8,7,48,46,49,47);   //LCD Pins
+
+
+
 
 void setup() {
   pinMode (30, OUTPUT); //Rote LED
-  lcd.begin(16,2);
+  lcd.begin(16,2);      //16 Zeichen 2 Reihen
   Serial.begin(9600);
   while (!Serial);
 
@@ -51,15 +57,22 @@ void wait(unsigned long dauer){
   }
 }
 
+int zeile=1;
+
 void holdtone(int a,int note,unsigned long dauer){
+  lcd.clear();
   unsigned long melodystart = millis ();
+  lcd.setCursor(random(0,15),zeile);     //Setzt startpunkt auf Display fest
+  lcd.print("R)");
   while (millis () - melodystart <= dauer)
   {
     tone(a,note);
   }
+  zeile = !zeile;
 }
 
-void melody(){
+void melody(){    //Fluch der Karibik
+
   Serial.println("☠");
   int viertel = 240;
   int achtel = 80;
@@ -96,9 +109,10 @@ void melody(){
   wait(pause);
   holdtone(42,587,achtel);
   wait(pause);
+  lcd.clear();
 }
 
-int getID() {
+int getID() {   //Methode um RFID auszulesen
   if (!rfid.PICC_IsNewCardPresent()) {
     return;
   }
@@ -121,9 +135,9 @@ int getID() {
 
 
 void loop() {
-
-  lcd.setCursor(0,0);
+  lcd.setCursor(0,0);     //Setzt startpunkt auf Display fest
   lcd.print("VAULT-TEC");
+
   getID();
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
@@ -136,12 +150,10 @@ void loop() {
   if ( millis () - Zeitlastswitch <= blinkzeitms)
   {
     digitalWrite(30, HIGH);
-    //digitalWrite(42, HIGH);
     tone(42, 600);
   } 
   else { 
     digitalWrite(30, LOW);
-    //digitalWrite(42,LOW);
     noTone(42);
   }
 
