@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include <Keypad.h>
+#include <MFRC522.h>
 
-    //Hier wird die größe des Keypads definiert
+   //Hier wird die größe des Keypads definiert
 const byte COLS = 4; //4 Spalten
 const byte ROWS = 4; //4 Zeilen
     //Die Ziffern und Zeichen des Keypads werden eingegeben:
@@ -18,19 +19,26 @@ char Taste; //Taste ist die Variable für die jeweils gedrückte Taste.
 
 Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann absofort mit "Tastenfeld" angesprochen werden
 
-int blinkzeitms = 100;
+unsigned long blinkzeitms = 100;
 unsigned long Zeitlastswitch = 0;
 
 
 
-
+MFRC522 rfid(53,5); // RFID Empfänger benennen und Pins zuordnen
 
 
 void setup() {
   pinMode (30, OUTPUT); //Rote LED
-  //pinMode (42, OUTPUT); //Buzzer
-   
+  
+  Serial.begin(9600);
+  while (!Serial);
+
+  SPI.begin();
+  rfid.PCD_Init();
+  delay(10);
 }
+
+
 void wait(unsigned long dauer){
   unsigned long pausestart = millis ();
   while (millis () - pausestart <= dauer)
@@ -48,6 +56,7 @@ void holdtone(int a,int note,unsigned long dauer){
 }
 
 void melody(){
+  Serial.println("☠");
   int viertel = 240;
   int achtel = 80;
   int pause = 50;
@@ -98,12 +107,29 @@ void loop() {
     digitalWrite(30, !ledstate);
     Zeitlastswitch = millis (); 
   } */
+
+  String WertDEZ;
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
   
   if (Taste && Taste != 'A') {
     Zeitlastswitch = millis (); 
+    Serial.print("Lets go ");
   } 
+
+  if (rfid.PICC_IsNewCardPresent())
+  {
+    // Dezimal-Wert in Strings schreiben
+  for (byte i = 0; i < rfid.uid.size; i++)
+  {
+    // String zusammenbauen
+    WertDEZ = WertDEZ + String(rfid.uid.uidByte[i], DEC) + " ";
+  }
+
+  // Kennung dezimal anzeigen
+  Serial.println("Dezimalwert: " + WertDEZ);
+  }
+
   if ( millis () - Zeitlastswitch <= blinkzeitms)
   {
     digitalWrite(30, HIGH);
@@ -119,6 +145,11 @@ void loop() {
   if (Taste == 'A') {
     melody ();
   } 
-   
-}
+  
+
+} 
+
+
+
+
 
