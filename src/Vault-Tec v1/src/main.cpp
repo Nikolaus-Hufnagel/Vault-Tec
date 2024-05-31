@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <Keypad.h>
 #include <MFRC522.h>
+#include <LiquidCrystal.h>
+#include <Wire.h>
 
    //Hier wird die größe des Keypads definiert
 const byte COLS = 4; //4 Spalten
@@ -19,13 +21,13 @@ char Taste; //Taste ist die Variable für die jeweils gedrückte Taste.
 
 Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann absofort mit "Tastenfeld" angesprochen werden
 
-unsigned long blinkzeitms = 100;
+unsigned long blinkzeitms = 100; //Blinkzeit der roten LED bei tastendruck
 unsigned long Zeitlastswitch = 0;
 
 
 
 MFRC522 rfid(53,5); // RFID Empfänger benennen und Pins zuordnen
-
+byte readcard[4];
 
 void setup() {
   pinMode (30, OUTPUT); //Rote LED
@@ -94,21 +96,31 @@ void melody(){
   wait(pause);
 }
 
-
+int getID() {
+  if (!rfid.PICC_IsNewCardPresent()) {
+    return;
+  }
+   if (!rfid.PICC_ReadCardSerial()) {
+    return;
+  }
+  
+  Serial.print("UID: ");
+  
+  for (byte i = 0; i < rfid.uid.size; i++) {
+      readcard[i] = rfid.uid.uidByte[i];
+      Serial.print(readcard[i],DEC);
+      Serial.print(" ");
+    }
+  Serial.println();
+}
 
 
 
 
 
 void loop() {
-  /*if (millis () - Zeitlastswitch >= blinkzeitms )
-    {
-    int ledstate = digitalRead (30);
-    digitalWrite(30, !ledstate);
-    Zeitlastswitch = millis (); 
-  } */
 
-  String WertDEZ;
+  getID();
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
   
@@ -116,19 +128,6 @@ void loop() {
     Zeitlastswitch = millis (); 
     Serial.print("Lets go ");
   } 
-
-  if (rfid.PICC_IsNewCardPresent())
-  {
-    // Dezimal-Wert in Strings schreiben
-  for (byte i = 0; i < rfid.uid.size; i++)
-  {
-    // String zusammenbauen
-    WertDEZ = WertDEZ + String(rfid.uid.uidByte[i], DEC) + " ";
-  }
-
-  // Kennung dezimal anzeigen
-  Serial.println("Dezimalwert: " + WertDEZ);
-  }
 
   if ( millis () - Zeitlastswitch <= blinkzeitms)
   {
@@ -148,8 +147,3 @@ void loop() {
   
 
 } 
-
-
-
-
-
