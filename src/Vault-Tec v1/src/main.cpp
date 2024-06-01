@@ -141,7 +141,7 @@ void loop() {
   getID();
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
-  
+
   if (Taste && Taste != 'A') {
     Zeitlastswitch = millis (); 
     Serial.print("Lets go ");
@@ -160,6 +160,13 @@ void loop() {
   if (Taste == 'A') {
     melody ();
   } 
-  
+
+// Nabor's Testcodes
+  /*if (!Taste){
+  melody(); //Melodie prüfen
+  digitalWrite(30, HIGH);
+  delay(500);
+  digitalWrite(30, LOW);
+  }*/
 
 } 
