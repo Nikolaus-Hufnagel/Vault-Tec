@@ -36,7 +36,13 @@ unsigned long blinkzeitms = 100; //Blinkzeit der roten LED bei tastendruck
 unsigned long Zeitlastswitch = 0;
 bool status = false;            // Status bool
 int zeile=1;                    //Wechselt zwischen 0 und 1 für Emoji-Zeilensprung bei Melody
-byte code1[4] = {182, 73, 139, 141}; //bekannte RFID Bibliothek
+byte codes[][4] ={              //bekannte RFID Bibliothek
+  {182, 73, 139, 141},
+  {182, 73, 139, 142},
+  {182, 73, 139, 143}
+};
+const byte numcodes = sizeof(codes) / sizeof(codes[0]); // Errechnet wie viele Codes in der Bibliothek sind
+
 
 
 //Setup
@@ -134,15 +140,26 @@ int getID() {   //Methode um RFID auszulesen
   
   Serial.println();
 }
-
-void getIDVergleich(){
-  for (byte i=0; i<4; i++){
-    if (readcard[i] != code1[i]){
-      return;
+//Methode zum Abgleich von zwei Arrays
+bool compareArrays(byte array1[], byte array2[], byte length){
+  for (byte i=0; i<length; i++){
+    if(array1[i] != array2[i]){
+      return false;
     }
   }
-  status = true;
+  return true;
 }
+//Vergleich die Codes der Karte mit den bekannten Code
+void getIDVergleich(){
+  for (byte i=0; i<numcodes; i++){
+    if (compareArrays(readcard, codes[i],4)){
+      status = true;
+      break;
+    }
+  }
+}
+
+
 
 
 
