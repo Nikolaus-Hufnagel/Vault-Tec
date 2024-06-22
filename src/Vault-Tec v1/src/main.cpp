@@ -69,9 +69,9 @@ void wait(unsigned long dauer){
 }
 
 void tonfalsch(){
-  tone(42,440,70);
-  delay(100);
-  tone(42,440,70);
+  tone(42,220,90);
+  delay(120);
+  tone(42,220,90);
   delay(1000);
 }
 
@@ -232,7 +232,5 @@ void loop() {
     digitalWrite(34, LOW);
     digitalWrite(26, HIGH);
   }
-
-  
 
 } 
