@@ -127,6 +127,12 @@ int getID() {   //Methode um RFID auszulesen
       Serial.print(readcard[i],DEC);
       Serial.print(" ");
     }
+  for (byte i = 0; i < sizeof(readcard); i++)
+  {
+    Serial.print(readcard[i]);
+    Serial.print(" ");
+  }
+  
   Serial.println();
 }
 
