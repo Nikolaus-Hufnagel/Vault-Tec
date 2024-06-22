@@ -1,3 +1,4 @@
+//Librarys
 #include <Arduino.h>
 #include <Keypad.h>           //Keypad Library
 #include <MFRC522.h>          //RFID Library
@@ -21,24 +22,26 @@ Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 
 
-unsigned long blinkzeitms = 100; //Blinkzeit der roten LED bei tastendruck
-unsigned long Zeitlastswitch = 0;
-
-
-
-
+//RFID
 MFRC522 rfid(53,5); // RFID Empfänger benennen und Pins zuordnen
-byte readcard[4];
+byte readcard[4]; //array mit ausgelesener RFID
 
 
 
 LiquidCrystal lcd(8,7,48,46,49,47);   //LCD Pins
 
 
+unsigned long blinkzeitms = 100; //Blinkzeit der roten LED bei tastendruck
+unsigned long Zeitlastswitch = 0;
+bool status = false; // Status bool
 
 
+
+//Setup initialisieren
 void setup() {
   pinMode (30, OUTPUT); //Rote LED
+  pinMode (26, OUTPUT); //Grüne LED für RFID
+  pinMode (34, OUTPUT); //Rote LED für RFID
   lcd.begin(16,2);      //16 Zeichen 2 Reihen
   Serial.begin(9600);
   while (!Serial);
@@ -48,7 +51,7 @@ void setup() {
   delay(10);
 }
 
-
+//Methode
 void wait(unsigned long dauer){
   unsigned long pausestart = millis ();
   while (millis () - pausestart <= dauer)
@@ -135,6 +138,7 @@ int getID() {   //Methode um RFID auszulesen
 
 
 
+// Läuft dauerhaft durch im späteren Code
 void loop() {
   lcd.setCursor(0,0);     //Setzt startpunkt auf Display fest
   lcd.print("VAULT-TEC");
@@ -162,12 +166,12 @@ void loop() {
     melody ();
   } 
 
-// Nabor's Testcodes
-  /*if (!Taste){
-  melody(); //Melodie prüfen
-  digitalWrite(30, HIGH);
-  delay(500);
-  digitalWrite(30, LOW);
-  }*/
+  if(status == false) {
+    digitalWrite(34, HIGH);
+    digitalWrite(26, LOW);
+  } else{
+    digitalWrite(34, LOW);
+    digitalWrite(26, HIGH);
+  }
 
 } 
