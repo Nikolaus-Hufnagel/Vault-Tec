@@ -36,7 +36,7 @@ unsigned long blinkzeitms = 100; //Blinkzeit der roten LED bei tastendruck
 unsigned long Zeitlastswitch = 0;
 bool status = false;            // Status bool
 int zeile=1;                    //Wechselt zwischen 0 und 1 für Emoji-Zeilensprung bei Melody
-
+byte code1[4] = {182, 73, 139, 141}; //bekannte RFID Bibliothek
 
 
 //Setup
@@ -135,6 +135,15 @@ int getID() {   //Methode um RFID auszulesen
   Serial.println();
 }
 
+void getIDVergleich(){
+  for (byte i=0; i<4; i++){
+    if (readcard[i] != code1[i]){
+      return;
+    }
+  }
+  status = true;
+}
+
 
 
 
@@ -145,6 +154,7 @@ void loop() {
   lcd.print("VAULT-TEC");
 
   getID();
+  getIDVergleich();
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
 
@@ -166,6 +176,7 @@ void loop() {
     melody ();
   } 
 
+
   if(status == false) {      //LED wechselt zwischen grün und rot abhängig vom Status
     digitalWrite(34, HIGH);
     digitalWrite(26, LOW);
@@ -173,5 +184,7 @@ void loop() {
     digitalWrite(34, LOW);
     digitalWrite(26, HIGH);
   }
+
+  
 
 } 
