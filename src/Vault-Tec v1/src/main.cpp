@@ -37,8 +37,8 @@ unsigned long Zeitlastswitch = 0;
 bool status = false;            // Status bool
 int zeile=1;                    //Wechselt zwischen 0 und 1 für Emoji-Zeilensprung bei Melody
 byte codes[][4] ={              //bekannte RFID Bibliothek
-  {182, 73, 139, 141},
   {182, 73, 139, 142},
+  {182, 73, 139, 141},
   {182, 73, 139, 143}
 };
 const byte numcodes = sizeof(codes) / sizeof(codes[0]); // Errechnet wie viele Codes in der Bibliothek sind
@@ -66,6 +66,13 @@ void wait(unsigned long dauer){
   {
     noTone(42);
   }
+}
+
+void tonfalsch(){
+  tone(42,440,70);
+  delay(100);
+  tone(42,440,70);
+  delay(1000);
 }
 
 
@@ -122,24 +129,6 @@ void melody(){    //Fluch der Karibik
   lcd.clear();
 }
 
-int getID() {   //Methode um RFID auszulesen
-  if (!rfid.PICC_IsNewCardPresent()) {
-    return;
-  }
-   if (!rfid.PICC_ReadCardSerial()) {
-    return;
-  }
-  
-  Serial.print("UID: ");
-  
-  for (byte i = 0; i < rfid.uid.size; i++) {
-      readcard[i] = rfid.uid.uidByte[i];  //Array mit RFID (4 Zahlenblöcke)
-      Serial.print(readcard[i],DEC);
-      Serial.print(" ");
-    }
-  
-  Serial.println();
-}
 //Methode zum Abgleich von zwei Arrays
 bool compareArrays(byte array1[], byte array2[], byte length){
   for (byte i=0; i<length; i++){
@@ -149,15 +138,53 @@ bool compareArrays(byte array1[], byte array2[], byte length){
   }
   return true;
 }
-//Vergleich die Codes der Karte mit den bekannten Code
-void getIDVergleich(){
-  for (byte i=0; i<numcodes; i++){
-    if (compareArrays(readcard, codes[i],4)){
-      status = true;
-      break;
+
+int getID() {   //Methode um RFID auszulesen
+
+  if (!rfid.PICC_IsNewCardPresent()) {
+    return;
+  }
+   if (!rfid.PICC_ReadCardSerial()) {
+    return;
+  }
+  
+  Serial.print("UID: ");
+  for (byte i = 0; i < rfid.uid.size; i++) {
+      readcard[i] = rfid.uid.uidByte[i];  //Array mit RFID (4 Zahlenblöcke)
+      Serial.print(readcard[i],DEC);
+      Serial.print(" ");
     }
+  Serial.println();
+
+  if (status == false)
+  {
+    for (byte i=0; i<numcodes; i++){
+      if (compareArrays(readcard, codes[i],4) == true){
+        status = true;
+        tone(42,784,500);
+        return;
+      }
+    }
+    tonfalsch();
   }
 }
+
+//Vergleich die Codes der Karte mit den bekannten Code
+/*void getIDVergleich(){
+
+
+  for (byte i=0; i<numcodes; i++){
+    if (compareArrays(readcard, codes[i],4) == true){
+      status = true;
+      tone(42,784,500);
+      break;
+      }
+    }
+    tone(42, 440, 100);
+    delay(200);
+    tone(42, 440, 100);
+  
+}*/
 
 
 
@@ -171,7 +198,7 @@ void loop() {
   lcd.print("VAULT-TEC");
 
   getID();
-  getIDVergleich();
+  //getIDVergleich();
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
 
@@ -182,16 +209,20 @@ void loop() {
 
   if ( millis () - Zeitlastswitch <= blinkzeitms) {   //Rote LED leuchtet für "blinkzeitms" millisekunden nach tastendruck
     digitalWrite(30, HIGH);
-    tone(42, 600);
+    tone(42, 600, blinkzeitms - 30);
   } 
   else { 
     digitalWrite(30, LOW);
-    noTone(42);
+    //noTone(42);
   }
 
   if (Taste == 'A') {       //Wenn Taste A gedrückt wird startet die Melody
     melody ();
   } 
+
+  if (Taste == 'B') {       //Wenn Taste B gedrückt wird status auf false gesetzt zu test zwecken
+    status = false;
+  }
 
 
   if(status == false) {      //LED wechselt zwischen grün und rot abhängig vom Status
