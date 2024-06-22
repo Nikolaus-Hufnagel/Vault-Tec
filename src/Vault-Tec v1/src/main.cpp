@@ -31,13 +31,15 @@ byte readcard[4]; //array mit ausgelesener RFID
 LiquidCrystal lcd(8,7,48,46,49,47);   //LCD Pins
 
 
+
 unsigned long blinkzeitms = 100; //Blinkzeit der roten LED bei tastendruck
 unsigned long Zeitlastswitch = 0;
-bool status = false; // Status bool
+bool status = false;            // Status bool
+int zeile=1;                    //Wechselt zwischen 0 und 1 für Emoji-Zeilensprung bei Melody
 
 
 
-//Setup initialisieren
+//Setup
 void setup() {
   pinMode (30, OUTPUT); //Rote LED
   pinMode (26, OUTPUT); //Grüne LED für RFID
@@ -51,7 +53,7 @@ void setup() {
   delay(10);
 }
 
-//Methode
+//Methoden
 void wait(unsigned long dauer){
   unsigned long pausestart = millis ();
   while (millis () - pausestart <= dauer)
@@ -60,7 +62,6 @@ void wait(unsigned long dauer){
   }
 }
 
-int zeile=1;
 
 void holdtone(int a,int note,unsigned long dauer){
   lcd.clear();
@@ -147,13 +148,12 @@ void loop() {
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
 
-  if (Taste && Taste != 'A') {
+  if (Taste && Taste != 'A') {    //Bei Tastendruck wird zeit gemerkt
     Zeitlastswitch = millis (); 
     Serial.print("Lets go ");
   } 
 
-  if ( millis () - Zeitlastswitch <= blinkzeitms)
-  {
+  if ( millis () - Zeitlastswitch <= blinkzeitms) {   //Rote LED leuchtet für "blinkzeitms" millisekunden nach tastendruck
     digitalWrite(30, HIGH);
     tone(42, 600);
   } 
@@ -162,11 +162,11 @@ void loop() {
     noTone(42);
   }
 
-  if (Taste == 'A') {
+  if (Taste == 'A') {       //Wenn Taste A gedrückt wird startet die Melody
     melody ();
   } 
 
-  if(status == false) {
+  if(status == false) {      //LED wechselt zwischen grün und rot abhängig vom Status
     digitalWrite(34, HIGH);
     digitalWrite(26, LOW);
   } else{
