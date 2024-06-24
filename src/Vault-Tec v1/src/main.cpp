@@ -226,26 +226,31 @@ void loop() {
   if (Taste == '1') {    //Bei Tastendruck von '1' gebe '1' aus 
     Zeitlastswitch = millis (); 
     Serial.print("1");
+    Servomotor.write(0);
   } 
   
   if (Taste == '2') {    //Bei Tastendruck von '2' gebe '2' aus 
     Zeitlastswitch = millis (); 
     Serial.print("2");
+    Servomotor.write(90);
   } 
 
   if (Taste == '3') {    //Bei Tastendruck von '3' gebe '3' aus 
     Zeitlastswitch = millis (); 
     Serial.print("3");
+    Servomotor.write(180);
   } 
 
 if (Taste == '4') {    //Bei Tastendruck von '4' gebe '4' aus 
     Zeitlastswitch = millis (); 
     Serial.print("4");
+    Servomotor.write(270);
   } 
 
 if (Taste == '5') {    //Bei Tastendruck von '5' gebe '5' aus 
     Zeitlastswitch = millis (); 
     Serial.print("5");
+    Servomotor.write(360);
   } 
 
 if (Taste == '6') {    //Bei Tastendruck von '6' gebe '6' aus 
@@ -331,9 +336,5 @@ if (Taste == '#') {    //Bei Tastendruck von '#' gebe '#' aus
     digitalWrite(26, HIGH);
   }
 
-  Servomotor.write(0); // Servomotor Test
-  delay(1000);
-  Servomotor.write(180);
-  delay(1000);
 
 } 
