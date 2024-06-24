@@ -43,7 +43,10 @@ byte codes[][4] ={              //bekannte RFID Bibliothek
 };
 const byte numcodes = sizeof(codes) / sizeof(codes[0]); // Errechnet wie viele Codes in der Bibliothek sind
 
-
+//Ultraschall
+int SENDEN = 3; // Pin für Output Ultraschallsensor
+int ECHO = 2; // Pin für input Ultraschallsensor
+long Entfernung = 0; // Speicherung der Entfernung
 
 //Setup
 void setup() {
@@ -57,6 +60,9 @@ void setup() {
   SPI.begin();
   rfid.PCD_Init();
   delay(10);
+
+  pinMode(SENDEN, OUTPUT); //Ultraschallsignal senden
+  pinMode(ECHO, INPUT); //Ultraschallsignal empfangen
 }
 
 //Methoden
@@ -185,6 +191,12 @@ int getID() {   //Methode um RFID auszulesen
     tone(42, 440, 100);
   
 }*/
+
+
+
+
+
+
 
 
 
