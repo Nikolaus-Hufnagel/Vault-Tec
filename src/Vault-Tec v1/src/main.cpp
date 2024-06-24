@@ -244,13 +244,11 @@ void loop() {
 if (Taste == '4') {    //Bei Tastendruck von '4' gebe '4' aus 
     Zeitlastswitch = millis (); 
     Serial.print("4");
-    Servomotor.write(270);
   } 
 
 if (Taste == '5') {    //Bei Tastendruck von '5' gebe '5' aus 
     Zeitlastswitch = millis (); 
     Serial.print("5");
-    Servomotor.write(360);
   } 
 
 if (Taste == '6') {    //Bei Tastendruck von '6' gebe '6' aus 
