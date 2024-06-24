@@ -4,6 +4,7 @@
 #include <MFRC522.h>          //RFID Library
 #include <LiquidCrystal.h>    //LCD Library    
 #include <Wire.h>
+#include <Servo.h>            //Servo Library
 
 
     //Hier wird die größe des Keypads definiert
@@ -48,6 +49,9 @@ int SENDEN = 3; // Pin für Output Ultraschallsensor
 int ECHO = 2; // Pin für input Ultraschallsensor
 long Entfernung = 0; // Speicherung der Entfernung
 
+//Servomotor
+Servo Servomotor; 
+
 //Setup
 void setup() {
   pinMode (30, OUTPUT); //Rote LED
@@ -63,6 +67,8 @@ void setup() {
 
   pinMode(SENDEN, OUTPUT); //Ultraschallsignal senden
   pinMode(ECHO, INPUT); //Ultraschallsignal empfangen
+
+  Servomotor.attach(4); //Servomotor auf Pin 4 legen
 }
 
 //Methoden
@@ -324,5 +330,10 @@ if (Taste == '#') {    //Bei Tastendruck von '#' gebe '#' aus
     digitalWrite(34, LOW);
     digitalWrite(26, HIGH);
   }
+
+  Servomotor.write(0); // Servomotor Test
+  delay(1000);
+  Servomotor.write(180);
+  delay(1000);
 
 } 
