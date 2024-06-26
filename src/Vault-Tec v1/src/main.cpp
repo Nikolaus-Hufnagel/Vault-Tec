@@ -224,15 +224,18 @@ void loop() {
   
 
   if (Taste && Taste == '1') {    //Bei Tastendruck von '1' gebe '1' aus 
+    Serial.print("1");
     Servomotor.write(0);
   } 
   
   if (Taste && Taste == '2') {    //Bei Tastendruck von '2' gebe '2' aus  
-    Servomotor.write(60);
+    Serial.print("2");
+    Servomotor.write(90);
   } 
 
   if (Taste && Taste == '3') {    //Bei Tastendruck von '3' gebe '3' aus 
-    Servomotor.write(120);
+    Serial.print("3");
+    Servomotor.write(180);
   } 
 
 /*if (Taste == '4') {    //Bei Tastendruck von '4' gebe '4' aus 
