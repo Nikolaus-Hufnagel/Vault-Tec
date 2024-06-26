@@ -217,9 +217,9 @@ void loop() {
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
 
-  if (Taste && Taste != 'A') {    //Bei Tastendruck wird zeit gemerkt
-    Zeitlastswitch = millis (); 
-    Serial.print("Lets go ");
+  if (Taste && Taste != 'A') {   //Bei allen Tasten außer 'A' wird die jeweilige Taste im Serial Monitor ausgegeben
+    Zeitlastswitch = millis ();  //Bei Tastendruck wird zeit gemerkt
+    Serial.print(Taste);
   } 
   
 
@@ -241,7 +241,7 @@ void loop() {
     Servomotor.write(180);
   } 
 
-if (Taste == '4') {    //Bei Tastendruck von '4' gebe '4' aus 
+/*if (Taste == '4') {    //Bei Tastendruck von '4' gebe '4' aus 
     Zeitlastswitch = millis (); 
     Serial.print("4");
   } 
@@ -304,7 +304,7 @@ if (Taste == '*') {    //Bei Tastendruck von '*' gebe '*' aus
 if (Taste == '#') {    //Bei Tastendruck von '#' gebe '#' aus 
     Zeitlastswitch = millis (); 
     Serial.print("#");
-  } 
+  } */
 
 
 
