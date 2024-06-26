@@ -68,7 +68,7 @@ void setup() {
   pinMode(SENDEN, OUTPUT); //Ultraschallsignal senden
   pinMode(ECHO, INPUT); //Ultraschallsignal empfangen
 
-  Servomotor.attach(4); //Servomotor auf Pin 4 legen
+  Servomotor.attach(39); //Servomotor auf Pin 4 legen
 }
 
 //Methoden
@@ -235,7 +235,7 @@ void loop() {
 
   if (Taste && Taste == '3') {    //Bei Tastendruck von '3' gebe '3' aus 
     Serial.print("3");
-    Servomotor.write(180);
+    Servomotor.write(120);
   } 
 
 /*if (Taste == '4') {    //Bei Tastendruck von '4' gebe '4' aus 
