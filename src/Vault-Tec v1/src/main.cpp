@@ -223,20 +223,17 @@ void loop() {
   } 
   
 
-  if (Taste == '1') {    //Bei Tastendruck von '1' gebe '1' aus 
-    Zeitlastswitch = millis (); 
+  if (Taste && Taste == '1') {    //Bei Tastendruck von '1' gebe '1' aus 
     Serial.print("1");
     Servomotor.write(0);
   } 
   
-  if (Taste == '2') {    //Bei Tastendruck von '2' gebe '2' aus 
-    Zeitlastswitch = millis (); 
+  if (Taste && Taste == '2') {    //Bei Tastendruck von '2' gebe '2' aus  
     Serial.print("2");
     Servomotor.write(90);
   } 
 
-  if (Taste == '3') {    //Bei Tastendruck von '3' gebe '3' aus 
-    Zeitlastswitch = millis (); 
+  if (Taste && Taste == '3') {    //Bei Tastendruck von '3' gebe '3' aus 
     Serial.print("3");
     Servomotor.write(180);
   } 
