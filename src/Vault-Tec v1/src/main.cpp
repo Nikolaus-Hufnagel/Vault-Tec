@@ -22,6 +22,14 @@ char Taste; //Taste ist die Variable für die jeweils gedrückte Taste.
 Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann absofort mit "Tastenfeld" angesprochen werden
 
 
+    //Der korrekte Code für das Tasenfeld wird über ein Array definiert
+/*int correctcode[4] = {1, 2, 3, 4};
+    //Array zum speichern von eingegebenen Zahlen
+const int codelänge = 4;
+int code[codelänge];  //Code hat 4 Ziffern
+int i = 0;  //Arrayindex*/
+
+
 
 //RFID
 MFRC522 rfid(53,5); // RFID Empfänger benennen und Pins zuordnen
@@ -68,7 +76,7 @@ void setup() {
   pinMode(SENDEN, OUTPUT); //Ultraschallsignal senden
   pinMode(ECHO, INPUT); //Ultraschallsignal empfangen
 
-  Servomotor.attach(39); //Servomotor auf Pin 4 legen
+  Servomotor.attach(39); //Servomotor auf Pin 39 legen
 }
 
 //Methoden
@@ -224,17 +232,14 @@ void loop() {
   
 
   if (Taste && Taste == '1') {    //Bei Tastendruck von '1' gebe '1' aus 
-    Serial.print("1");
     Servomotor.write(0);
   } 
   
   if (Taste && Taste == '2') {    //Bei Tastendruck von '2' gebe '2' aus  
-    Serial.print("2");
-    Servomotor.write(90);
+    Servomotor.write(60);
   } 
 
   if (Taste && Taste == '3') {    //Bei Tastendruck von '3' gebe '3' aus 
-    Serial.print("3");
     Servomotor.write(120);
   } 
 
