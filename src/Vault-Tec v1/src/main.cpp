@@ -23,11 +23,11 @@ Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 
     //Der korrekte Code für das Tasenfeld wird über ein Array definiert
-/*int correctcode[4] = {1, 2, 3, 4};
+int correctcode[4] = {1, 2, 3, 4};
     //Array zum speichern von eingegebenen Zahlen
-const int codelänge = 4;
-int code[codelänge];  //Code hat 4 Ziffern
-int i = 0;  //Arrayindex*/
+const int codelength = 4;
+char code[codelength];  //Code hat 4 Ziffern
+int i = 0;  //Arrayindex
 
 
 
@@ -224,6 +224,16 @@ void loop() {
   //getIDVergleich();
   
   Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
+  
+  //IF-Schleife um Array zu füllen
+  if (Taste)
+  {
+    if (isdigit(Taste)) {
+      code[i] = Taste;
+      i++;
+    }
+  }
+    
 
   if (Taste && Taste != 'A') {   //Bei allen Tasten außer 'A' wird die jeweilige Taste im Serial Monitor ausgegeben
     Zeitlastswitch = millis ();  //Bei Tastendruck wird zeit gemerkt
