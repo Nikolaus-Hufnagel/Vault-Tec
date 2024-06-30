@@ -207,9 +207,13 @@ int getID() {   //Methode um RFID auszulesen
 }*/
 
 
-
-
-
+//Methode, um Code Array zu printen
+void showcode(char codearray[], int size){
+  for (int x = 0; x < size; x++){
+    Serial.print(codearray[x]);
+  } 
+  Serial.println(); 
+}
 
 
 
@@ -223,9 +227,9 @@ void loop() {
   getID();
   //getIDVergleich();
   
-  Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
+  Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrÃ¼ckten Taste
   
-  //IF-Schleife um Array zu füllen
+  //IF-Schleife um Array zu fÃ¼llen
   if (Taste)
   {
     if (isdigit(Taste)) {
@@ -235,7 +239,7 @@ void loop() {
   }
     
 
-  if (Taste && Taste != 'A') {   //Bei allen Tasten außer 'A' wird die jeweilige Taste im Serial Monitor ausgegeben
+  if (Taste && Taste != 'A') {   //Bei allen Tasten auÃŸer 'A' wird die jeweilige Taste im Serial Monitor ausgegeben
     Zeitlastswitch = millis ();  //Bei Tastendruck wird zeit gemerkt
     Serial.print(Taste);
   } 
