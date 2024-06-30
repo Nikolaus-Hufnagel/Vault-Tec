@@ -53,9 +53,9 @@ byte codes[][4] ={              //bekannte RFID Bibliothek
 const byte numcodes = sizeof(codes) / sizeof(codes[0]); // Errechnet wie viele Codes in der Bibliothek sind
 
 //Ultraschall
-int SENDEN = 3; // Pin für Output Ultraschallsensor
+int SEND = 3; // Pin für Output Ultraschallsensor
 int ECHO = 2; // Pin für input Ultraschallsensor
-long Entfernung = 0; // Speicherung der Entfernung
+long distance = 0; // Speicherung der Entfernung
 
 //Servomotor
 Servo Servomotor; 
@@ -73,7 +73,7 @@ void setup() {
   rfid.PCD_Init();
   delay(10);
 
-  pinMode(SENDEN, OUTPUT); //Ultraschallsignal senden
+  pinMode(SEND, OUTPUT); //Ultraschallsignal senden
   pinMode(ECHO, INPUT); //Ultraschallsignal empfangen
 
   Servomotor.attach(39); //Servomotor auf Pin 39 legen
@@ -238,10 +238,31 @@ void loop() {
         Serial.print("Eingegebener Code: ");
         showcode(code, codelength);
 
-        i = 0;
+        i = 0; //nach Code-Eingabe wird Inex auf 0 zurückgesetzt, um Array neu zu füllen
       }
     }
   }
+
+  //Ultraschallsensor Entfernungsmessung
+  digitalWrite(SEND, LOW); 
+  delay(5);                   //Sender kurz ausschalten zur Störungsvermeidung
+
+  digitalWrite(SEND, HIGH);  //Ultraschallsignal für 10 Microsekunden senden
+  delayMicroseconds(10);
+  digitalWrite(SEND, LOW);
+
+  long sonictime = pulseIn(ECHO, HIGH);  //Zeit bis das Ultraschallsignal zurückkommt
+
+  distance = (sonictime/2)*0.0342;  //Formel zum berechnen des Abstands von Objekt zu Ultraschallsensor
+  delay(300);
+
+  if (distance <= 5)  //Abgleich des Türabstandes (kleiner als 5cm)
+  {
+    Serial.print(" Entfernung zur Tür: ");  //Ausgabe des Abstands auf dem Serial Monitor
+    Serial.print(distance);
+    Serial.print(" cm");
+  }
+  
     
 
   if (Taste && Taste != 'A') {   //Bei allen Tasten außer 'A' wird die jeweilige Taste im Serial Monitor ausgegeben
