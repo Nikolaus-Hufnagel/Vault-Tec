@@ -217,8 +217,6 @@ void showcode(char codearray[], int size){
 
 
 
-
-
 // Läuft dauerhaft durch im späteren Code
 void loop() {
   lcd.setCursor(0,0);     //Setzt startpunkt auf Display fest
@@ -229,7 +227,7 @@ void loop() {
   
   char Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
   
-  //IF-Schleife um Array mit Code zu füllen
+    //IF-Schleife um Array mit Code zu füllen
   if (Taste) {
     if (isdigit(Taste)) {
       code[i] = Taste;
@@ -237,7 +235,7 @@ void loop() {
       Serial.print(Taste);
       if (i >= codelength) {
         Serial.println();
-        Serial.print("Der Code: ");
+        Serial.print("Eingegebener Code Code: ");
         showcode(code, codelength);
 
         i = 0;
