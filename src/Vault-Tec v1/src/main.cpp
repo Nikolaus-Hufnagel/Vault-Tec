@@ -19,12 +19,10 @@ char hexaKeys[ROWS][COLS]={
 byte colPins[COLS] = {35,33,31,29}; //Definition der Pins für die 4 Spalten
 byte rowPins[ROWS] = {27,25,23,22};//Definition der Pins für die 4 Zeilen
 char Taste; //Taste ist die Variable für die jeweils gedrückte Taste.
-Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann absofort mit "Tastenfeld" angesprochen werden
+Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann mit "Tastenfeld" angesprochen werden
 
 
 int codecorrect[4] = {1,2,3,4}; //Der korrekte Code für das Tasenfeld wird über ein Array definiert
-
-
 const int codelength = 4; //Array zum speichern von eingegebenen Zahlen
 int code[codelength];  //Code hat 4 Ziffern
 int index = 0;  //Arrayindex
@@ -40,10 +38,12 @@ byte readcard[4]; //array mit ausgelesener RFID
 LiquidCrystal lcd(8,7,48,46,49,47);   //LCD Pins
 
 
-
+unsigned long v = 0;              //Zähler für unterstrich auf dem display
 unsigned long blinkzeitms = 100; //Blinkzeit der roten LED bei tastendruck
 unsigned long Zeitlastswitch = 0;
-bool status = false;            // Status bool
+boolean strich = false;
+bool status = false;            // Status bool ob tastenfeld freigegeben ist
+bool richtigercode = false;       // boolean ob code richtig eingegeben wurde
 int zeile=1;                    //Wechselt zwischen 0 und 1 für Emoji-Zeilensprung bei Melody
 byte codes[][4] ={              //bekannte RFID Bibliothek
   {182, 73, 139, 142},
@@ -149,6 +149,45 @@ void melody(){    //Fluch der Karibik
   lcd.clear();
 }
 
+void unterstrich(){     //boolean strich wechselt alle 600ms zwischen true und false
+  if (millis() - v >= 600){
+    strich = !strich;
+    v = millis();
+    for (int i = 0; i < index; i++)
+    {
+      lcd.setCursor(6+i,1);
+      lcd.write("*");
+    }  
+    Serial.println(strich);
+  }
+}
+
+
+void displayanzeige() {
+    if (status == false){
+      lcd.setCursor(0,0);     
+      lcd.print("VAULT-TEC");
+      lcd.setCursor(5,1);     
+      lcd.print("LOCKED");
+
+    }else{
+      unterstrich();
+      lcd.setCursor(0,0);     
+      lcd.print("VAULT-TEC");
+      lcd.setCursor(1,1);     
+      lcd.print("Code:");
+      if(index<4){
+        lcd.setCursor((6+index),1);
+        if(strich == true){
+          lcd.print("_");
+        }else{
+          lcd.print(" ");
+        }
+      }
+    }
+}
+
+
 //Methode zum Abgleich von zwei Arrays
 bool compareArrays( byte array1[], byte array2[], byte length){
   for (byte i=0; i<length; i++){
@@ -189,6 +228,7 @@ int getID() {   //Methode um RFID auszulesen
     for (byte i=0; i<numcodes; i++){
       if (compareArrays(readcard, codes[i],4) == true){
         status = true;
+        lcd.clear();
         tone(42,784,500);
         return;
       }
@@ -223,8 +263,7 @@ void showcode(int codearray[], int size){
 
 // Läuft dauerhaft durch im späteren Code
 void loop() {
-  lcd.setCursor(0,0);     //Setzt startpunkt auf Display fest
-  lcd.print("VAULT-TEC");
+  displayanzeige();
 
   getID();
   //getIDVergleich();
@@ -237,18 +276,24 @@ void loop() {
       code[index] = (Taste - 48);      //Taste wird in int umgewandelt. char 0 = int 48
       index++;                  //Index geht eine Position weiter
       Serial.print(Taste);
-      if (index >= codelength) {  //Wenn das Array gefüllt ist, wird der vollständige Code im Serial Monitor angezeigt
+      lcd.setCursor((5+index),1);
+      lcd.write(Taste);
+      v = millis();
+      strich = false;
+      if (index == codelength) {  //Wenn das Array gefüllt ist, wird der vollständige Code im Serial Monitor angezeigt
         Serial.println();
         Serial.print("Eingegebener Code: ");
         showcode(code, codelength);
         if (compareArraysint(code, codecorrect, 4) == true)
         {
           Serial.print(" korrekt");
+          richtigercode = true;
+
         } else {
           Serial.print(" falsch");
         }
         Serial.println();
-
+        lcd.clear();
         index = 0; //nach Code-Eingabe wird Index auf 0 zurückgesetzt, um Array neu zu füllen
       }
     }
@@ -292,6 +337,7 @@ void loop() {
 
   if (Taste == 'B') {       //Wenn Taste B gedrückt wird status auf false gesetzt zu test zwecken
     status = false;
+    lcd.clear();
   }
 
 
