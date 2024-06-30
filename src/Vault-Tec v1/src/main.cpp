@@ -227,100 +227,29 @@ void loop() {
   getID();
   //getIDVergleich();
   
-  Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrÃ¼ckten Taste
+  char Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
   
-  //IF-Schleife um Array zu fÃ¼llen
-  if (Taste)
-  {
+  //IF-Schleife um Array mit Code zu füllen
+  if (Taste) {
     if (isdigit(Taste)) {
       code[i] = Taste;
       i++;
+      Serial.print(Taste);
+      if (i >= codelength) {
+        Serial.println();
+        Serial.print("Der Code: ");
+        showcode(code, codelength);
+
+        i = 0;
+      }
     }
   }
     
 
-  if (Taste && Taste != 'A') {   //Bei allen Tasten auÃŸer 'A' wird die jeweilige Taste im Serial Monitor ausgegeben
+  if (Taste && Taste != 'A') {   //Bei allen Tasten außer 'A' wird die jeweilige Taste im Serial Monitor ausgegeben
     Zeitlastswitch = millis ();  //Bei Tastendruck wird zeit gemerkt
-    Serial.print(Taste);
   } 
   
-
-  if (Taste && Taste == '1') {    //Bei Tastendruck von '1' gebe '1' aus 
-    Servomotor.write(0);
-  } 
-  
-  if (Taste && Taste == '2') {    //Bei Tastendruck von '2' gebe '2' aus  
-    Servomotor.write(60);
-  } 
-
-  if (Taste && Taste == '3') {    //Bei Tastendruck von '3' gebe '3' aus 
-    Servomotor.write(120);
-  } 
-
-/*if (Taste == '4') {    //Bei Tastendruck von '4' gebe '4' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("4");
-  } 
-
-if (Taste == '5') {    //Bei Tastendruck von '5' gebe '5' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("5");
-  } 
-
-if (Taste == '6') {    //Bei Tastendruck von '6' gebe '6' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("6");
-  } 
-
-if (Taste == '7') {    //Bei Tastendruck von '7' gebe '7' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("7");
-  } 
-
-if (Taste == '8') {    //Bei Tastendruck von '8' gebe '8' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("8");
-  } 
-
-  if (Taste == '9') {    //Bei Tastendruck von '9' gebe '9' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("9");
-  } 
-
-if (Taste == '0') {    //Bei Tastendruck von '0' gebe '0' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("0");
-  } 
-
-if (Taste == 'A') {    //Bei Tastendruck von 'A' gebe 'A' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("A");
-  } 
-
-if (Taste == 'B') {    //Bei Tastendruck von 'B' gebe 'B' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("B");
-  } 
-
-if (Taste == 'C') {    //Bei Tastendruck von 'C' gebe 'C' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("C");
-  } 
-
-if (Taste == 'D') {    //Bei Tastendruck von 'D' gebe 'D' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("D");
-  } 
-
-if (Taste == '*') {    //Bei Tastendruck von '*' gebe '*' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("*");
-  } 
-
-if (Taste == '#') {    //Bei Tastendruck von '#' gebe '#' aus 
-    Zeitlastswitch = millis (); 
-    Serial.print("#");
-  } */
 
 
 
