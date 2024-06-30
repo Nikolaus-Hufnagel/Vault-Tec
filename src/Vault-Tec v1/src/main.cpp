@@ -216,7 +216,7 @@ void showcode(char codearray[], int size){
 }
 
 
-    //Ultraschallsensor Entfernungsmessung
+//Ultraschallsensor Entfernungsmessung
 long measuredistance() {
 
   digitalWrite(SEND, LOW); 
@@ -226,7 +226,6 @@ long measuredistance() {
   digitalWrite(SEND, LOW);
 
   long sonictime = pulseIn(ECHO, HIGH);  //Zeit bis das Ultraschallsignal zurückkommt
-
   return (sonictime/2)*0.0342;  //Formel zum berechnen des Abstands von Objekt zu Ultraschallsensor
 }
 
@@ -259,6 +258,7 @@ void loop() {
   }
 
 
+//Distanzmessung
   distance = measuredistance(); //Aufrufen der Methode zur Distanzmessung
   
   if (distance <= 5)  //Abgleich des Türabstandes (kleiner als 5cm)
