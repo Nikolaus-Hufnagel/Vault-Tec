@@ -235,7 +235,7 @@ void loop() {
       Serial.print(Taste);
       if (i >= codelength) {
         Serial.println();
-        Serial.print("Eingegebener Code Code: ");
+        Serial.print("Eingegebener Code: ");
         showcode(code, codelength);
 
         i = 0;
