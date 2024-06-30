@@ -216,6 +216,21 @@ void showcode(char codearray[], int size){
 }
 
 
+    //Ultraschallsensor Entfernungsmessung
+long measuredistance() {
+
+  digitalWrite(SEND, LOW); 
+  delayMicroseconds(2);      //Sender kurz ausschalten zur Störungsvermeidung
+  digitalWrite(SEND, HIGH);  //Ultraschallsignal für 10 Microsekunden senden
+  delayMicroseconds(10);
+  digitalWrite(SEND, LOW);
+
+  long sonictime = pulseIn(ECHO, HIGH);  //Zeit bis das Ultraschallsignal zurückkommt
+
+  return (sonictime/2)*0.0342;  //Formel zum berechnen des Abstands von Objekt zu Ultraschallsensor
+}
+
+
 
 // Läuft dauerhaft durch im späteren Code
 void loop() {
@@ -230,37 +245,30 @@ void loop() {
     //IF-Schleife um Array mit Code zu füllen
   if (Taste) {
     if (isdigit(Taste)) {
-      code[i] = Taste;
-      i++;
+      code[i] = Taste;      //Beim Tastendruck wird der jeweilige 
+      i++;                  //Index geht eine Position weiter
       Serial.print(Taste);
-      if (i >= codelength) {
+      if (i >= codelength) {  //Wenn das Array gefüllt ist, wird der vollständige Code im Serial Monitor angezeigt
         Serial.println();
         Serial.print("Eingegebener Code: ");
         showcode(code, codelength);
 
-        i = 0; //nach Code-Eingabe wird Inex auf 0 zurückgesetzt, um Array neu zu füllen
+        i = 0; //nach Code-Eingabe wird Index auf 0 zurückgesetzt, um Array neu zu füllen
       }
     }
   }
 
-  //Ultraschallsensor Entfernungsmessung
-  digitalWrite(SEND, LOW); 
-  delay(5);                   //Sender kurz ausschalten zur Störungsvermeidung
 
-  digitalWrite(SEND, HIGH);  //Ultraschallsignal für 10 Microsekunden senden
-  delayMicroseconds(10);
-  digitalWrite(SEND, LOW);
-
-  long sonictime = pulseIn(ECHO, HIGH);  //Zeit bis das Ultraschallsignal zurückkommt
-
-  distance = (sonictime/2)*0.0342;  //Formel zum berechnen des Abstands von Objekt zu Ultraschallsensor
-  delay(300);
-
+  distance = measuredistance(); //Aufrufen der Methode zur Distanzmessung
+  
   if (distance <= 5)  //Abgleich des Türabstandes (kleiner als 5cm)
   {
-    Serial.print(" Entfernung zur Tür: ");  //Ausgabe des Abstands auf dem Serial Monitor
+    Serial.print("Tür ist geschlossen (");  //Ausgabe des Abstands auf dem Serial Monitor
     Serial.print(distance);
-    Serial.print(" cm");
+    Serial.print("cm) ");
+    
+  } else if (distance > 5){
+       Serial.print("Tür ist offen. ");
   }
   
     
