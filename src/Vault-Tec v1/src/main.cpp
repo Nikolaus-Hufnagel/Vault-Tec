@@ -22,12 +22,12 @@ char Taste; //Taste ist die Variable für die jeweils gedrückte Taste.
 Keypad Tastenfeld = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //Das Keypad kann absofort mit "Tastenfeld" angesprochen werden
 
 
-    //Der korrekte Code für das Tasenfeld wird über ein Array definiert
-int correctcode[4] = {1, 2, 3, 4};
-    //Array zum speichern von eingegebenen Zahlen
-const int codelength = 4;
-char code[codelength];  //Code hat 4 Ziffern
-int i = 0;  //Arrayindex
+int codecorrect[4] = {1,2,3,4}; //Der korrekte Code für das Tasenfeld wird über ein Array definiert
+
+
+const int codelength = 4; //Array zum speichern von eingegebenen Zahlen
+int code[codelength];  //Code hat 4 Ziffern
+int index = 0;  //Arrayindex
 
 
 
@@ -150,8 +150,17 @@ void melody(){    //Fluch der Karibik
 }
 
 //Methode zum Abgleich von zwei Arrays
-bool compareArrays(byte array1[], byte array2[], byte length){
+bool compareArrays( byte array1[], byte array2[], byte length){
   for (byte i=0; i<length; i++){
+    if(array1[i] != array2[i]){
+      return false;
+    }
+  }
+  return true;
+}
+
+bool compareArraysint( int array1[], int array2[], int length){ //Methode um integer arrays zu vergleichen
+  for (int i=0; i<length; i++){
     if(array1[i] != array2[i]){
       return false;
     }
@@ -176,8 +185,7 @@ int getID() {   //Methode um RFID auszulesen
     }
   Serial.println();
 
-  if (status == false)
-  {
+  if (status == false) {
     for (byte i=0; i<numcodes; i++){
       if (compareArrays(readcard, codes[i],4) == true){
         status = true;
@@ -189,35 +197,17 @@ int getID() {   //Methode um RFID auszulesen
   }
 }
 
-//Vergleich die Codes der Karte mit den bekannten Code
-/*void getIDVergleich(){
-
-
-  for (byte i=0; i<numcodes; i++){
-    if (compareArrays(readcard, codes[i],4) == true){
-      status = true;
-      tone(42,784,500);
-      break;
-      }
-    }
-    tone(42, 440, 100);
-    delay(200);
-    tone(42, 440, 100);
-  
-}*/
-
 
 //Methode, um Code Array zu printen
-void showcode(char codearray[], int size){
+void showcode(int codearray[], int size){
   for (int x = 0; x < size; x++){
     Serial.print(codearray[x]);
   } 
-  Serial.println(); 
 }
 
 
 //Ultraschallsensor Entfernungsmessung
-long measuredistance() {
+/*long measuredistance() {
 
   digitalWrite(SEND, LOW); 
   delayMicroseconds(2);      //Sender kurz ausschalten zur Störungsvermeidung
@@ -227,7 +217,7 @@ long measuredistance() {
 
   long sonictime = pulseIn(ECHO, HIGH);  //Zeit bis das Ultraschallsignal zurückkommt
   return (sonictime/2)*0.0342;  //Formel zum berechnen des Abstands von Objekt zu Ultraschallsensor
-}
+}*/
 
 
 
@@ -244,22 +234,29 @@ void loop() {
     //IF-Schleife um Array mit Code zu füllen
   if (Taste) {
     if (isdigit(Taste)) {
-      code[i] = Taste;      //Beim Tastendruck wird der jeweilige 
-      i++;                  //Index geht eine Position weiter
+      code[index] = (Taste - 48);      //Taste wird in int umgewandelt. char 0 = int 48
+      index++;                  //Index geht eine Position weiter
       Serial.print(Taste);
-      if (i >= codelength) {  //Wenn das Array gefüllt ist, wird der vollständige Code im Serial Monitor angezeigt
+      if (index >= codelength) {  //Wenn das Array gefüllt ist, wird der vollständige Code im Serial Monitor angezeigt
         Serial.println();
         Serial.print("Eingegebener Code: ");
         showcode(code, codelength);
+        if (compareArraysint(code, codecorrect, 4) == true)
+        {
+          Serial.print(" korrekt");
+        } else {
+          Serial.print(" falsch");
+        }
+        Serial.println();
 
-        i = 0; //nach Code-Eingabe wird Index auf 0 zurückgesetzt, um Array neu zu füllen
+        index = 0; //nach Code-Eingabe wird Index auf 0 zurückgesetzt, um Array neu zu füllen
       }
     }
   }
 
 
 //Distanzmessung
-  distance = measuredistance(); //Aufrufen der Methode zur Distanzmessung
+  /*distance = measuredistance(); //Aufrufen der Methode zur Distanzmessung
   
   if (distance <= 5)  //Abgleich des Türabstandes (kleiner als 5cm)
   {
@@ -269,7 +266,7 @@ void loop() {
     
   } else if (distance > 5){
        Serial.print("Tür ist offen. ");
-  }
+  }*/
   
     
 
@@ -305,6 +302,4 @@ void loop() {
     digitalWrite(34, LOW);
     digitalWrite(26, HIGH);
   }
-
-
 } 
