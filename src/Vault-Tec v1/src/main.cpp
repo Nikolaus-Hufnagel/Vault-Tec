@@ -29,6 +29,7 @@ int index = 0;  //Arrayindex
 
 
 
+
 //RFID
 MFRC522 rfid(53,5); // RFID Empfänger benennen und Pins zuordnen
 byte readcard[4]; //array mit ausgelesener RFID
@@ -246,6 +247,7 @@ void showcode(int codearray[], int size){
 }
 
 
+
 //Ultraschallsensor Entfernungsmessung
 /*long measuredistance() {
 
@@ -271,33 +273,34 @@ void loop() {
   char Taste = Tastenfeld.getKey(); //Mit Unter der Variablen pressedKey entspricht der gedrückten Taste
   
     //IF-Schleife um Array mit Code zu füllen
+  if (status == true) {
   if (Taste) {
     if (isdigit(Taste)) {
-      code[index] = (Taste - 48);      //Taste wird in int umgewandelt. char 0 = int 48
-      index++;                  //Index geht eine Position weiter
+      code[index] = (Taste - 48);  // Taste wird in int umgewandelt. char '0' = int 48
+      index++;                     // Index geht eine Position weiter
       Serial.print(Taste);
-      lcd.setCursor((5+index),1);
+      lcd.setCursor((5 + index), 1);
       lcd.write(Taste);
       v = millis();
       strich = false;
-      if (index == codelength) {  //Wenn das Array gefüllt ist, wird der vollständige Code im Serial Monitor angezeigt
+      if (index == codelength) {  // Wenn das Array gefüllt ist, wird der vollständige Code im Serial Monitor angezeigt
         Serial.println();
         Serial.print("Eingegebener Code: ");
         showcode(code, codelength);
-        if (compareArraysint(code, codecorrect, 4) == true)
-        {
+        if (compareArraysint(code, codecorrect, 4) == true) {
           Serial.print(" korrekt");
           richtigercode = true;
-
         } else {
           Serial.print(" falsch");
         }
         Serial.println();
         lcd.clear();
-        index = 0; //nach Code-Eingabe wird Index auf 0 zurückgesetzt, um Array neu zu füllen
+        index = 0;  // nach Code-Eingabe wird Index auf 0 zurückgesetzt, um Array neu zu füllen
       }
     }
   }
+}
+
 
 
 //Distanzmessung
