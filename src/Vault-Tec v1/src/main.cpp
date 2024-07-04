@@ -57,6 +57,7 @@ const byte numcodes = sizeof(codes) / sizeof(codes[0]); // Errechnet wie viele C
 int SEND = 3; // Pin für Output Ultraschallsensor
 int ECHO = 2; // Pin für input Ultraschallsensor
 long distance = 0; // Speicherung der Entfernung
+bool tueroffen = true;
 
 //Servomotor
 Servo Servomotor; 
@@ -249,7 +250,7 @@ void showcode(int codearray[], int size){
 
 
 //Ultraschallsensor Entfernungsmessung
-/*long measuredistance() {
+long measuredistance() {
 
   digitalWrite(SEND, LOW); 
   delayMicroseconds(2);      //Sender kurz ausschalten zur Störungsvermeidung
@@ -259,7 +260,7 @@ void showcode(int codearray[], int size){
 
   long sonictime = pulseIn(ECHO, HIGH);  //Zeit bis das Ultraschallsignal zurückkommt
   return (sonictime/2)*0.0342;  //Formel zum berechnen des Abstands von Objekt zu Ultraschallsensor
-}*/
+}
 
 
 
@@ -304,17 +305,19 @@ void loop() {
 
 
 //Distanzmessung
-  /*distance = measuredistance(); //Aufrufen der Methode zur Distanzmessung
+  distance = measuredistance(); //Aufrufen der Methode zur Distanzmessung
   
   if (distance <= 5)  //Abgleich des Türabstandes (kleiner als 5cm)
   {
+    tueroffen = false;
     Serial.print("Tür ist geschlossen (");  //Ausgabe des Abstands auf dem Serial Monitor
     Serial.print(distance);
     Serial.print("cm) ");
     
   } else if (distance > 5){
-       Serial.print("Tür ist offen. ");
-  }*/
+      tueroffen = true;
+      Serial.print("Tür ist offen. ");
+  }
   
     
 
